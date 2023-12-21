@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Комната 1</title>
+    <style>
+        /* Общие стили для страниц комнат */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            /* Дополнительные стили по желанию */
+        }
+
+        .room-details {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Стили для изображений комнаты */
+        .room-details img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            /* Дополнительные стили по желанию */
+        }
+
+        /* Дополнительные стили по желанию */
+        h1 {
+            color: #333;
+        }
+
+        /* Стили для ссылок */
+        a {
+            display: block;
+            margin: 5px 0;
+            padding: 8px 15px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #3498db;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #2980b9;
+        }
+
+        .centered {
+            text-align: center;
+        }
+
+        /* Flexbox styles */
+        .links {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+
+</head>
+<body>
+    <h1>Детали комнаты 1</h1>
+
+    <div class="room-details">
+        <h3>Номер 1</h3>
+        <p>Просторный номер с видом на город. Включает в себя Wi-Fi и завтрак.</p>
+        <p>Цена за сутки: 2500 рублей</p>
+
+        <!-- Добавьте здесь все фотографии для комнаты номер 1 -->
+        <img src="https://yestour.ru/upload/information_system_5/0/1/6/group_16/group_16.jpg" alt="Номер 1 фото 1">
+        <img src="https://www.thesun.co.uk/wp-content/uploads/2017/12/nintchdbpict000371101827.jpg?strip=all&w=960" alt="Номер 1 фото 2">
+        <img src="https://www.thesun.co.uk/wp-content/uploads/2017/12/nintchdbpict000371101809.jpg?strip=all&w=960" alt="Номер 1 фото 3">
+        <a href="/bookings">Перейти к бронированию</a> <!-- Ссылка на страницу "Бронирования" -->
+        <!-- Добавьте больше изображений по мере необходимости -->
+
+    </div>
+
+    <!-- Добавьте другие детали комнаты, если нужно -->
+    <div class="centered">
+        <a href="{{ url_for('index') }}">Вернуться на главную страницу</a>
+    </div>
+    <div class="links">
+    <a href="/room2">Перейти к следующая комната</a> <!-- Ссылка на страницу "Комната 2" -->
+     </div>
+
+    <footer>
+        <p>&copy; 2023 Название Вашего хостела. Все права защищены.</p>
+    </footer>
+</body>
+</html>

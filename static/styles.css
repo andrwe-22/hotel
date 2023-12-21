@@ -1,0 +1,219 @@
+/* Стили для заголовка */
+h1 {
+    text-align: center;
+    font-size: 24px;
+}
+/* Стили для контейнера навигации */
+header {
+    background-color: dodgerblue;
+    color: #fff;
+    padding: 20px;
+    border: 1px solid #ba68c8;
+    margin-bottom: 20px;
+}
+
+nav ul {
+    list-style-type: none;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+}
+
+nav li {
+    display: inline;
+    margin: 0 20px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #0077cc;
+}
+
+
+
+
+/* Стили для секций */
+section {
+    padding: 20px;
+    margin: 20px;
+}
+
+h2 {
+    font-size: 20px;
+}
+
+
+
+/* Стили для размещения номеров вертикально */
+#rooms {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.room {
+    width: 90%; /* Увеличиваем ширину блока номера */
+    max-width: 1000px; /* Задаем максимальную ширину для всех номеров */
+    margin: 50px 0; /* Увеличиваем отступы между номерами */
+    padding: 30px;
+    border: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.room img {
+    width: 100%; /* Задаем 100% ширины изображения внутри блока */
+    margin-bottom: 20px; /* Увеличиваем отступ после изображения */
+}
+
+
+/* Стили для раздела отзывов и рейтинга */
+#reviews {
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+.review {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+.review p {
+    margin: 5px 0;
+}
+
+.rating {
+    font-size: 20px;
+    color: gold;
+}
+
+
+/* Стили для футера */
+footer {
+    text-align: center;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 3px;
+    background-color: dodgerblue;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+button:hover {
+    background-color: #0077cc;
+}
+
+p {
+    margin-top: 15px;
+}
+
+a {
+    color: dodgerblue;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Стили для сообщений */
+.message {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.error {
+    color: red;
+}
+
+.success {
+    color: green;
+}
+/* Стили для контейнера формы */
+.container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+/* Стили для заголовка формы */
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+
+/* Стили для кнопки отправки */
+button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 3px;
+    background-color: dodgerblue;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+button:hover {
+    background-color: #0077cc;
+}
+
+/* Стили для ссылок */
+p {
+    margin-top: 15px;
+}
+
+a {
+    color: dodgerblue;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Стили для сообщений */
+.message {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.error {
+    color: red;
+}
+
+.success {
+    color: green;
+}

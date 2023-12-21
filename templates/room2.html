@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Комната 2</title>
+   <style>
+    /* Общие стили для страниц комнат */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            /* Дополнительные стили по желанию */
+        }
+
+        .room-details {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Стили для изображений комнаты */
+        .room-details img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            /* Дополнительные стили по желанию */
+        }
+
+        /* Дополнительные стили по желанию */
+        h1 {
+            color: #333;
+        }
+
+        /* Стили для ссылок */
+        a {
+            display: block;
+            margin: 5px 0;
+            padding: 8px 15px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #3498db;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #2980b9;
+        }
+
+        .centered {
+            text-align: center;
+        }
+        /* Flexbox styles */
+        .links {
+            display: flex;
+            justify-content: space-between;
+    </style>
+</head>
+<body>
+    <h1>Детали комнаты 2</h1>
+
+    <div class="room-details">
+        <h3>Номер 2</h3>
+        <p>Уютный номер с собственной ванной комнатой и кондиционером.</p>
+        <p>Цена за сутки: 4000 рублей</p>
+        <img src="https://fb.ru/misc/i/gallery/85188/2662746.jpg" alt="Номер 2 фото 1">
+        <img src="https://amiel.club/uploads/posts/2022-10/1664841506_14-amiel-club-p-interer-nomera-v-gostinitse-krasivo-15.jpg" alt="Номер 2 фото 2">
+        <img src="https://amiel.club/uploads/posts/2022-10/1664841467_12-amiel-club-p-interer-nomera-v-gostinitse-krasivo-12.jpg" alt="Номер 2 фото 3">
+         <a href="/bookings">Перейти к бронированию</a> <!-- Ссылка на страницу "Бронирования" -->
+
+        <!-- Добавьте изображения для комнаты номер 2 -->
+</div>
+
+    <!-- Добавьте другие детали комнаты, если нужно -->
+    <div class="centered">
+        <a href="{{ url_for('index') }}">Вернуться на главную страницу</a>
+    </div>
+    <div class="links">
+    <a href="/room1">Перейти к предыдущая комната</a> <!-- Ссылка на страницу "Комната1 " -->
+    <a href="/room3">Перейти к следующая комната</a> <!-- Ссылка на страницу "Комната 3" -->
+     </div>
+
+    <footer>
+        <p>&copy; 2023 Название Вашего хостела. Все права защищены.</p>
+    </footer>
+</body>
+</html>
