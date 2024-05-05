@@ -2,22 +2,27 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-image: url('/static/registration.jpg');
+    background-size: cover;
+    background-position: center;
     color: #333;
 }
 
 .container {
+    margin-left: 850px;
     width: 30%;
-    margin: 50px auto;
+    margin-top: 50px;
     padding: 20px;
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 80px rgba(0, 0, 0, 0.1);
     background-color: #fff;
+    border: 2px solid black;
 }
 
 .container form {
     max-width: 400px;
     margin: 0 auto;
+    box-shadow: 0 0 80px rgba(0, 0, 0, 0.1);
 }
 
 h2 {

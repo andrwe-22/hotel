@@ -1,8 +1,21 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('/static/index.jpg'); /* Add the path to your image */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* Fix the background image */
+    color: #333;
+}
+
 /* Стили для заголовка */
 h1 {
     text-align: center;
     font-size: 24px;
 }
+
 /* Стили для контейнера навигации */
 header {
     background-color: dodgerblue;
@@ -35,9 +48,6 @@ nav a:hover {
     color: #0077cc;
 }
 
-
-
-
 /* Стили для секций */
 section {
     padding: 20px;
@@ -47,8 +57,6 @@ section {
 h2 {
     font-size: 20px;
 }
-
-
 
 /* Стили для размещения номеров вертикально */
 #rooms {
@@ -66,13 +74,13 @@ h2 {
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-color: white;
 }
 
 .room img {
     width: 100%; /* Задаем 100% ширины изображения внутри блока */
     margin-bottom: 20px; /* Увеличиваем отступ после изображения */
 }
-
 
 /* Стили для раздела отзывов и рейтинга */
 #reviews {
@@ -94,7 +102,6 @@ h2 {
     font-size: 20px;
     color: gold;
 }
-
 
 /* Стили для футера */
 footer {
@@ -146,6 +153,7 @@ a:hover {
 .success {
     color: green;
 }
+
 /* Стили для контейнера формы */
 .container {
     max-width: 400px;
@@ -160,8 +168,8 @@ a:hover {
 h2 {
     text-align: center;
     margin-bottom: 20px;
+    color: dodgerblue;
 }
-
 
 .input-group {
     margin-bottom: 15px;
@@ -171,7 +179,6 @@ label {
     display: block;
     margin-bottom: 5px;
 }
-
 
 /* Стили для кнопки отправки */
 button {
@@ -193,8 +200,23 @@ button:hover {
 /* Стили для ссылок */
 p {
     margin-top: 15px;
+    color: dodgerblue;
+
+    border-radius: 5px;
+    width:800px;
 }
 
+h3 {
+margin-top: 15px;
+    color: white;
+
+
+}
+h4 {
+margin-top: 15px;
+    color: dodgerblue;
+font-size: 34px;
+}
 a {
     color: dodgerblue;
     text-decoration: none;

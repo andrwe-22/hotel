@@ -1,3 +1,6 @@
+<!-- bookings.html-->
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,17 +10,23 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            padding: 0;
             background-color: #f4f4f4;
+            background-image: url('/static/bookings.jpg'); /* Add the path to your image */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed; /* Fix the background image */
         }
         h2 {
-            color: #333;
+            color: white;
         }
         form {
-            max-width: 400px;
+            max-width: 500px;
             margin: 0 auto;
             padding: 20px;
             background-color: #fff;
-            border-radius: 8px;
+            border-radius: 30px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         label, input, select {
@@ -55,11 +64,11 @@
     <h2>Форма бронирования</h2>
     <form id="bookingForm" action="/book" method="POST">
         <label for="room">Выберите номер:</label>
-        <<select id="room" name="room" onchange="changeImage()" required>
-          <option value="1" data-price-per-night="2500">Номер 1</option>
-          <option value="2" data-price-per-night="4000">Номер 2</option>
-          <option value="3" data-price-per-night="3000">Номер 3</option>
-          <option value="4" data-price-per-night="3500">Номер 4</option>
+        <select id="room" name="room" onchange="changeImage()" required>
+            <option value="1" data-price-per-night="3500">vip room</option>
+            <option value="2" data-price-per-night="2000">Standard room</option>
+            <option value="3" data-price-per-night="2500">Double room</option>
+            <option value="4" data-price-per-night="3000">Suite room</option>
             <!-- Add more options as needed -->
         </select><br><br>
 
@@ -83,7 +92,7 @@
             <input type="text" id="guest1" name="guest1" required><br><br>
         </div>
 
-        <p id="priceInfo">Стоимость: 0 рублей</p>
+        <p id="priceInfo" style="display: none;">Стоимость: 0 рублей</p> <!-- Hide the price initially -->
 
         <button type="submit">Забронировать</button>
     </form>
@@ -98,51 +107,68 @@
             }
 
             var selectedRoom = roomSelect.options[roomSelect.selectedIndex].text;
-            if (selectedRoom === "Номер 1") {
+            if (selectedRoom === "vip room") {
                 document.getElementById("room1Image").style.display = "block"; // Show image for room 1
-            } else if (selectedRoom === "Номер 2") {
+            } else if (selectedRoom === "Standard room") {
                 document.getElementById("room2Image").style.display = "block"; // Show image for room 2
-            } else if (selectedRoom === "Номер 3") {
+            } else if (selectedRoom === "Double room") {
                 document.getElementById("room3Image").style.display = "block"; // Show image for room 3
-            } else if (selectedRoom === "Номер 4") {
+            } else if (selectedRoom === "Suite room") {
                 document.getElementById("room4Image").style.display = "block"; // Show image for room 4
             }
             // Add more conditions for other rooms if needed
             calculatePrice(); // Calculate price when room changes
         }
 
-        function calculatePrice() {
-            var checkIn = new Date(document.getElementById("check-in").value);
-            var checkOut = new Date(document.getElementById("check-out").value);
-            var guests = parseInt(document.getElementById("guests").value);
-            var roomSelect = document.getElementById("room");
-            var pricePerNight = parseInt(roomSelect.options[roomSelect.selectedIndex].getAttribute("data-price-per-night"));
+  function calculatePrice() {
+    var checkIn = new Date(document.getElementById("check-in").value);
+    var checkOut = new Date(document.getElementById("check-out").value);
+    var guests = parseInt(document.getElementById("guests").value);
+    var roomSelect = document.getElementById("room");
+    var pricePerNight = parseInt(roomSelect.options[roomSelect.selectedIndex].getAttribute("data-price-per-night"));
 
-            var durationInDays = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
-            var totalPrice = durationInDays * pricePerNight * guests;
+    var durationInDays = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+    var totalPrice = durationInDays * pricePerNight * guests;
+    var discount = 0.0; // Default discount is 0%
 
-            document.getElementById("priceInfo").textContent = "Стоимость: " + totalPrice + " рублей";
+    // Apply additional pricing rules based on the duration of stay
+    if (durationInDays > 5 && durationInDays <= 10) {
+        // Apply a 5% discount for stays longer than 5 days but less than or equal to 10 days
+        discount = 0.05;
+    } else if (durationInDays > 10) {
+        // Apply a 10% discount for stays longer than 10 days
+        discount = 0.10;
+    }
 
-            // Дополнительный код для отображения полей ФИО для каждого гостя в зависимости от количества
-            var guestNamesDiv = document.getElementById("guestNames");
-            guestNamesDiv.innerHTML = ""; // Очистить предыдущие поля ФИО перед добавлением новых
+    totalPrice -= totalPrice * discount; // Apply the discount
 
-            for (var i = 1; i <= guests; i++) {
-                var label = document.createElement("label");
-                label.for = "guest" + i;
-                label.textContent = "ФИО гостя " + i + ":";
-                guestNamesDiv.appendChild(label);
+    if (!isNaN(totalPrice)) {
+        document.getElementById("priceInfo").textContent = "Стоимость: " + totalPrice.toFixed(2) + " рублей";
+        document.getElementById("priceInfo").style.display = "block";
+    } else {
+        document.getElementById("priceInfo").style.display = "none";
+    }
 
-                var input = document.createElement("input");
-                input.type = "text";
-                input.id = "guest" + i;
-                input.name = "guest" + i;
-                input.required = true;
-                guestNamesDiv.appendChild(input);
+    var guestNamesDiv = document.getElementById("guestNames");
+    guestNamesDiv.innerHTML = "";
 
-                guestNamesDiv.appendChild(document.createElement("br")); // Добавить перенос строки между полями
-            }
-        }
+    for (var i = 1; i <= guests; i++) {
+        var label = document.createElement("label");
+        label.for = "guest" + i;
+        label.textContent = "ФИО гостя " + i + ":";
+        guestNamesDiv.appendChild(label);
+
+        var input = document.createElement("input");
+        input.type = "text";
+        input.id = "guest" + i;
+        input.name = "guest" + i;
+        input.required = true;
+        guestNamesDiv.appendChild(input);
+
+        guestNamesDiv.appendChild(document.createElement("br"));
+    }
+}
+
     </script>
 </body>
 </html>

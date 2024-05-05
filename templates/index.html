@@ -1,3 +1,4 @@
+<!-- index.html-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,7 +21,7 @@
  <!-- Other navigation items -->
                     {% if 'logged_in' in session %}
                     <li class="float-right">
-                        <p>Welcome, {{ session['username'] }}</p>
+                        <h3>Welcome, {{ session['username'] }}</h3>
                     </li>
                     {% endif %}
             </ul>
@@ -28,35 +29,41 @@
     </header>
 
     <section id="about">
-        <h2>О нас</h2>
+        <h4>О нас</h4>
         <p>Название Вашего хостела - это уютное место для путешественников. Мы предоставляем комфортные номера и высокий уровень обслуживания.</p>
     </section>
 
     <section id="rooms">
-    <h2>Наши номера</h2>
-    <div class="room" data-room="Номер 1" data-price-per-night="2500">
+    <h4>Наши номера</h4>
+         <!-- ////////// room 1 ///////////// -->
+
+    <div class="room" data-room="vip room" data-price-per-night="3500">
         <img loading="lazy" decoding="async" class=" ls-is-cached lazyloaded" data-src="https://yestour.ru/upload/information_system_5/0/1/6/group_16/group_16.jpg" src="https://yestour.ru/upload/information_system_5/0/1/6/group_16/group_16.jpg">
-        <h3> <a href="/room1">Номер 1</a></h3>
+        <h3> <a href="/viproom">vip room</a></h3>
         <p>Просторный номер с видом на город. Включает в себя Wi-Fi и завтрак.</p>
-        <p>Цена за сутки: 2500 рублей</p>
+        <p>Цена за сутки:3500 рублей</p>
     </div>
-    <div class="room" data-room="Номер 2" data-price-per-night="4000">
+
+            <!-- ////////// room 2 ///////////// -->
+    <div class="room" data-room="Standard room" data-price-per-night="2000">
         <img loading="lazy" decoding="async" class=" ls-is-cached lazyloaded" data-src="https://fb.ru/misc/i/gallery/85188/2662746.jpg" src="https://fb.ru/misc/i/gallery/85188/2662746.jpg">
-         <h3> <a href="/room2">Номер 2</a></h3>
+         <h3> <a href="/Standardroom">Standard room</a></h3>
         <p>Уютный номер с собственной ванной комнатой и кондиционером.</p>
-        <p>Цена за сутки: 4000 рублей</p>
+        <p>Цена за сутки: 2000 рублей </p>
     </div>
-    <div class="room" data-room="Номер 3" data-price-per-night="3000">
-    <img loading="lazy" decoding="async" src="https://www.gannett-cdn.com/-mm-/05b227ad5b8ad4e9dcb53af4f31d7fbdb7fa901b/c=0-64-2119-1259/local/-/media/USATODAY/USATODAY/2014/08/13/1407953244000-177513283.jpg?width=2560" alt="Номер 3">
-    <h3> <a href="/room3">Номер 3</a></h3>
+         <!-- ////////// room 3 ///////////// -->
+    <div class="room" data-room="Double room" data-price-per-night="2500">
+    <img loading="lazy" decoding="async" src="https://www.gannett-cdn.com/-mm-/05b227ad5b8ad4e9dcb53af4f31d7fbdb7fa901b/c=0-64-2119-1259/local/-/media/USATODAY/USATODAY/2014/08/13/1407953244000-177513283.jpg?width=2560" alt="Double room">
+    <h3> <a href="/Doubleroom">Double room</a></h3>
     <p>росторный номер с видом на сад и бассейн. Включает в себя удобства для отдыха и развлечений.</p>
-    <p>Цена за сутки: 3000 рублей</p>
+    <p>Цена за сутки: 2500 рублей</p>
 </div>
-<div class="room" data-room="Номер 4" data-price-per-night="3500">
+        <!-- ////////// room 4 ///////////// -->
+<div class="room" data-room="Suite room" data-price-per-night="3000">
     <img loading="lazy" decoding="async" src="https://www.cvent.com/sites/default/files/styles/focus_scale_and_crop_800x450/public/image/2021-10/hotel%20room%20with%20beachfront%20view.webp?h=662a4f7c&itok=7Laa3LkQ" alt="Номер 4">
-    <h3> <a href="/room4">Номер 4</a></h3>
+    <h3> <a href="/Suiteroom">Suite room</a></h3>
     <p>Уютный номер с видом на озеро и собственным пляжем. Идеальное место для расслабления у воды.</p>
-    <p>Цена за сутки: 3500 рублей</p>
+    <p>Цена за сутки: 3000 рублей</p>
 </div>
 </section>
 
@@ -72,15 +79,15 @@
         <p>Прекрасный хостел с удобным расположением и чистыми номерами.</p>
         <span class="rating">★★★★★</span>
     </div>
- <!-- Display comments from comments.json -->
-    {% for comment in comments %}
-    <div class="review">
-        <p>{{ comment.comment }}</p>
-        <span class="rating">{% for i in range(comment.rating) %}★{% endfor %}</span>
-    </div>
-    {% endfor %}
+  <!-- Display comments from the database -->
+{% for comment in comments %}
+<div class="review">
+    <p>{{ comment.comment }}</p>
+</div>
+{% endfor %}
+
     <!-- Form for adding new comments -->
-    <form action="/add_comment" method="POST">
+   <form action="/add_comment" method="POST">
         <div class="input-group">
             <label for="new-comment">Добавить комментарий:</label>
             <textarea id="new-comment" name="new-comment" required></textarea>
@@ -98,15 +105,15 @@
     <section id="contact">
         <h2>Контакты</h2>
         <address>
-            <p>Название Вашего хостела</p>
+            <p>Ваш отель</p>
             <p>Адрес: Улица, Город</p>
-            <p>Телефон: +7 123-456-789</p>
-            <p>Email: info@yourhostel.com</p>
+            <p>Телефон: +7 908-142-9063</p>
+            <p>Email: androrafat59@gmail.com</p>
         </address>
     </section>
 
     <footer>
-        <p>&copy; 2023 Название Вашего хостела. Все права защищены.</p>
+        <p>&copy; 2023 Ваш отель. Все права защищены.</p>
     </footer>
 </body>
 </html>

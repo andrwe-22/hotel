@@ -1,15 +1,22 @@
+<!-- viproom.html-->
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Комната 1</title>
+    <title>Vip Комната </title>
     <style>
         /* Общие стили для страниц комнат */
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
             background-color: #f4f4f4;
+            background-image: url('/static/bookings.jpg'); /* Add the path to your image */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             /* Дополнительные стили по желанию */
         }
 
@@ -33,7 +40,7 @@
 
         /* Дополнительные стили по желанию */
         h1 {
-            color: #333;
+            color: whait;
         }
 
         /* Стили для ссылок */
@@ -65,17 +72,17 @@
 
 </head>
 <body>
-    <h1>Детали комнаты 1</h1>
+    <h1>Vip room  </h1>
 
     <div class="room-details">
-        <h3>Номер 1</h3>
+        <h3>Vip room</h3>
         <p>Просторный номер с видом на город. Включает в себя Wi-Fi и завтрак.</p>
-        <p>Цена за сутки: 2500 рублей</p>
+        <p>Цена за сутки: 3500 рублей</p>
 
         <!-- Добавьте здесь все фотографии для комнаты номер 1 -->
-        <img src="https://yestour.ru/upload/information_system_5/0/1/6/group_16/group_16.jpg" alt="Номер 1 фото 1">
-        <img src="https://www.thesun.co.uk/wp-content/uploads/2017/12/nintchdbpict000371101827.jpg?strip=all&w=960" alt="Номер 1 фото 2">
-        <img src="https://www.thesun.co.uk/wp-content/uploads/2017/12/nintchdbpict000371101809.jpg?strip=all&w=960" alt="Номер 1 фото 3">
+        <img src="https://yestour.ru/upload/information_system_5/0/1/6/group_16/group_16.jpg" alt="Vip room фото 1">
+        <img src="https://www.thesun.co.uk/wp-content/uploads/2017/12/nintchdbpict000371101827.jpg?strip=all&w=960" alt="Vip room фото 2">
+        <img src="https://www.thesun.co.uk/wp-content/uploads/2017/12/nintchdbpict000371101809.jpg?strip=all&w=960" alt="Vip room фото 3">
         <a href="/bookings">Перейти к бронированию</a> <!-- Ссылка на страницу "Бронирования" -->
         <!-- Добавьте больше изображений по мере необходимости -->
 
@@ -86,11 +93,11 @@
         <a href="{{ url_for('index') }}">Вернуться на главную страницу</a>
     </div>
     <div class="links">
-    <a href="/room2">Перейти к следующая комната</a> <!-- Ссылка на страницу "Комната 2" -->
+    <a href="/Standardroom">Перейти к следующая комната</a> <!-- Ссылка на страницу "Комната 2" -->
      </div>
 
     <footer>
-        <p>&copy; 2023 Название Вашего хостела. Все права защищены.</p>
+        <p>&copy; 2023 Ваш отель. Все права защищены.</p>
     </footer>
 </body>
 </html>

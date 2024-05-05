@@ -1,15 +1,22 @@
+<!-- Standardroom.html-->
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Комната 3</title>
-    <style>
+    <title>Standard room</title>
+   <style>
     /* Общие стили для страниц комнат */
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
             background-color: #f4f4f4;
+            background-image: url('/static/bookings.jpg'); /* Add the path to your image */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             /* Дополнительные стили по желанию */
         }
 
@@ -33,7 +40,7 @@
 
         /* Дополнительные стили по желанию */
         h1 {
-            color: #333;
+            color: whait;
         }
 
         /* Стили для ссылок */
@@ -60,34 +67,33 @@
             display: flex;
             justify-content: space-between;
     </style>
-
 </head>
 <body>
-    <h1>Детали комнаты 3</h1>
+    <h1>Standard room</h1>
 
     <div class="room-details">
-        <h3>Номер 3</h3>
-        <p>Просторный номер с видом на сад и бассейн. Включает в себя удобства для отдыха и развлечений.</p>
-        <p>Цена за сутки: 3000 рублей</p>
-        <img src="https://www.gannett-cdn.com/-mm-/05b227ad5b8ad4e9dcb53af4f31d7fbdb7fa901b/c=0-64-2119-1259/local/-/media/USATODAY/USATODAY/2014/08/13/1407953244000-177513283.jpg?width=2560" alt="Номер 3 фото 1">
-        <img src="https://amiel.club/uploads/posts/2022-10/1664841552_26-amiel-club-p-interer-nomera-v-gostinitse-krasivo-27.jpg" alt="Номер 3 фото 2">
-        <img src="https://amiel.club/uploads/posts/2022-10/1664841560_35-amiel-club-p-interer-nomera-v-gostinitse-krasivo-36.jpg" alt="Номер 3 фото 3" >
-        <a href="/bookings">Перейти к бронированию</a> <!-- Ссылка на страницу "Бронирования" -->
-    </div>
+        <h3>Standard</h3>
+        <p>Уютный номер с собственной ванной комнатой и кондиционером.</p>
+        <p>Цена за сутки: 2000 рублей</p>
+        <img src="https://fb.ru/misc/i/gallery/85188/2662746.jpg" alt="Standard room фото 1">
+        <img src="https://amiel.club/uploads/posts/2022-10/1664841506_14-amiel-club-p-interer-nomera-v-gostinitse-krasivo-15.jpg" alt="Номер 2 фото 2">
+        <img src="https://amiel.club/uploads/posts/2022-10/1664841467_12-amiel-club-p-interer-nomera-v-gostinitse-krasivo-12.jpg" alt="Номер 2 фото 3">
+         <a href="/bookings">Перейти к бронированию</a> <!-- Ссылка на страницу "Бронирования" -->
+
+        <!-- Добавьте изображения для комнаты номер 2 -->
+</div>
 
     <!-- Добавьте другие детали комнаты, если нужно -->
     <div class="centered">
         <a href="{{ url_for('index') }}">Вернуться на главную страницу</a>
     </div>
     <div class="links">
-    <a href="/room2">Перейти к предыдущая комната</a> <!-- Ссылка на страницу "Комната2 " -->
-    <a href="/room4">Перейти к следующая комната</a> <!-- Ссылка на страницу "Комната 4" -->
+    <a href="/viproom">Перейти к предыдущая комната</a> <!-- Ссылка на страницу "Комната1 " -->
+    <a href="/Doubleroom">Перейти к следующая комната</a> <!-- Ссылка на страницу "Комната 3" -->
      </div>
 
-
     <footer>
-        <p>&copy; 2023 Название Вашего хостела. Все права защищены.</p>
+        <p>&copy; 2023 Ваш отель. Все права защищены.</p>
     </footer>
 </body>
 </html>
-
