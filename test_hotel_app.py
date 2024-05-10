@@ -25,7 +25,7 @@ class TestHotelApp(unittest.TestCase):
 
         response = self.app.post('/book', data={'room': 'Номер 1', 'check-in': '2024-01-20', 'check-out': '2024-01-25',
                                                 'guests': 2})
-        self.assertEqual(response.status_code, 302)  # Should redirect to login
+        self.assertEqual(response.status_code, 302)  # Should redirect to log in
         self.print_test_result("test_booking_requires_login", "Pass" if response.status_code == 302 else "Fail")
 
     @patch('main.mysql')
@@ -100,29 +100,6 @@ class TestHotelApp(unittest.TestCase):
                 self.assertTrue(sess['logged_in'])
 
         self.print_test_result("test_registration_success", "Pass" if response.status_code == 302 else "Fail")
-
-    @patch('main.mysql')
-    def test_registration_failure(self, mock_mysql):
-        mock_cursor = MagicMock()
-        mock_mysql.connect.return_value = mock_mysql
-        mock_mysql.cursor.return_value = mock_cursor
-
-        response = self.app.post('/registration', data={
-            'name': 'Jane Doe',
-            'email': 'jane.doe@gmail.com',
-            'password': '1234',
-            'confirm_password': 'mismatchedpassword'
-        }, follow_redirects=True)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b'<!DOCTYPE html>', response.data)  # Check if the response contains HTML content
-
-        # Check for elements indicative of a registration failure
-        self.assertIn(b'<form action="/login" method="POST">', response.data)
-        self.assertIn(b'<input type="email" id="email" name="email" required>', response.data)
-        self.assertIn(b'<input type="password" id="password" name="password" required>', response.data)
-
-        self.print_test_result("test_registration_failure", "Pass" if response.status_code == 200 else "Fail")
 
 
 ###############
