@@ -157,6 +157,7 @@ def index():
     cursor.execute("SELECT * FROM comments")
     comments = cursor.fetchall()
 
+
     # Render the index page with comments
     return render_template('index.html', comments=comments)
 
@@ -309,6 +310,20 @@ def add_data():
         new_hostel = Hostels(name=name, address=address, phone_number=phone_number, email=email)
         db.session.add(new_hostel)
         db.session.commit()
+    elif data_type == 'booking':
+        # Extract booking data from the form
+        user_id = request.form['user_id']
+        room_id = request.form['room_id']
+        check_in_date = request.form['check_in_date']
+        check_out_date = request.form['check_out_date']
+        guests = request.form['guests']
+        discount = request.form.get('discount')  # Optional field
+
+        # Insert booking data into the Bookings table
+        new_booking = Bookings(user_id=user_id, room_id=room_id, check_in_date=check_in_date,
+                               check_out_date=check_out_date, guests=guests, discount=discount)
+        db.session.add(new_booking)
+        db.session.commit()
 
     return redirect('/admin')  # Redirect to the admin page after adding the data
 @app.route('/delete_data', methods=['POST'])
@@ -332,6 +347,12 @@ def delete_data():
             db.session.delete(hostel_to_delete)
             db.session.commit()
 
+    elif data_type == 'booking':
+        booking_to_delete = Bookings.query.get(data_id)
+        if booking_to_delete:
+            db.session.delete(booking_to_delete)
+            db.session.commit()
+
     return redirect('/admin')
 
 @app.route('/update_price', methods=['POST'])
@@ -345,3 +366,5 @@ def update_price():
         db.session.commit()
 
     return redirect('/admin')
+
+

@@ -1,10 +1,9 @@
-<!-- admin.html-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href=/static/css/admin.css>
+    <link rel="stylesheet" type="text/css" href="/static/css/admin.css">
     <title>Admin Page</title>
 </head>
 <body>
@@ -13,52 +12,81 @@
     <!-- Form for adding new data -->
     <h2>Add New Data</h2>
 
-    <!-- Add Room Form -->
-    <h3>Add Room</h3>
-    <form action="/add_data" method="POST">
-        <input type="hidden" name="data_type" value="room">
-        <label for="room_number">Room Number:</label>
-        <input type="text" id="room_number" name="room_number" required><br>
-        <label for="description">Description:</label>
-        <input type="text" id="description" name="description" required><br>
-        <label for="price_per_night">Price per Night:</label>
-        <input type="text" id="price_per_night" name="price_per_night" required><br>
-        <label for="hotel_id">Hotel ID:</label>
-        <input type="text" id="hotel_id" name="hotel_id" required><br>
+    <div class="form-container">
+        <!-- Add Room Form -->
+        <div class="form-column">
+            <h3>Add Room</h3>
+            <form action="/add_data" method="POST">
+                <input type="hidden" name="data_type" value="room">
+                <label for="room_number">Room Number:</label>
+                <input type="text" id="room_number" name="room_number" required><br>
+                <label for="description">Description:</label>
+                <input type="text" id="description" name="description" required><br>
+                <label for="price_per_night">Price per Night:</label>
+                <input type="text" id="price_per_night" name="price_per_night" required><br>
+                <label for="hotel_id">Hotel ID:</label>
+                <input type="text" id="hotel_id" name="hotel_id" required><br>
 
-        <input type="submit" value="Add Room">
-    </form>
+                <input type="submit" value="Add Room">
+            </form>
+        </div>
 
-    <!-- Add User Form -->
-    <h3>Add User</h3>
-    <form action="/add_data" method="POST">
-        <input type="hidden" name="data_type" value="user">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br>
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required><br>
+        <!-- Add User Form -->
+        <div class="form-column">
+            <h3>Add User</h3>
+            <form action="/add_data" method="POST">
+                <input type="hidden" name="data_type" value="user">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required><br>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required><br>
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required><br>
 
-        <input type="submit" value="Add User">
-    </form>
+                <input type="submit" value="Add User">
+            </form>
+        </div>
 
-    <!-- Add Hostel Form -->
-    <h3>Add Hostel</h3>
-    <form action="/add_data" method="POST">
-        <input type="hidden" name="data_type" value="hostel">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required><br>
-        <label for="address">Address:</label>
-        <input type="text" id="address" name="address" required><br>
-        <label for="phone_number">Phone Number:</label>
-        <input type="text" id="phone_number" name="phone_number" required><br>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required><br>
+        <!-- Add Hostel Form -->
+        <div class="form-column">
+            <h3>Add Hostel</h3>
+            <form action="/add_data" method="POST">
+                <input type="hidden" name="data_type" value="hostel">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required><br>
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="address" required><br>
+                <label for="phone_number">Phone Number:</label>
+                <input type="text" id="phone_number" name="phone_number" required><br>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required><br>
 
-        <input type="submit" value="Add Hostel">
-    </form>
+                <input type="submit" value="Add Hostel">
+            </form>
+        </div>
 
+        <!-- Add Booking Form -->
+        <div class="form-column">
+            <h3>Add Booking</h3>
+            <form action="/add_data" method="POST">
+                <input type="hidden" name="data_type" value="booking">
+                <label for="user_id">User ID:</label>
+                <input type="text" id="user_id" name="user_id" required><br>
+                <label for="room_id">Room ID:</label>
+                <input type="text" id="room_id" name="room_id" required><br>
+                <label for="check_in_date">Check-in Date:</label>
+                <input type="date" id="check_in_date" name="check_in_date" required><br>
+                <label for="check_out_date">Check-out Date:</label>
+                <input type="date" id="check_out_date" name="check_out_date" required><br>
+                <label for="guests">Number of Guests:</label>
+                <input type="number" id="guests" name="guests" required><br>
+                <label for="discount">Discount:</label>
+                <input type="text" id="discount" name="discount"><br>
+
+                <input type="submit" value="Add Booking">
+            </form>
+        </div>
+    </div>
 
     <!-- Form for updating data -->
     <h2>Update Price</h2>
@@ -71,7 +99,6 @@
         <input type="submit" value="Update Price">
     </form>
 
-
     <!-- Form for deleting data -->
     <h2>Delete Data</h2>
     <form action="/delete_data" method="POST">
@@ -82,6 +109,7 @@
             <option value="user">User</option>
             <option value="room">Room</option>
             <option value="hostel">Hostel</option>
+            <option value="booking">Booking</option>
         </select><br>
 
         <input type="submit" value="Delete Data">
@@ -107,6 +135,13 @@
     <ul>
         {% for hostel in hostels %}
             <li>ID: {{ hostel.id }}, Name: {{ hostel.name }}, Address: {{ hostel.address }}, Phone: {{ hostel.phone_number }}, Email: {{ hostel.email }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Bookings</h3>
+    <ul>
+        {% for booking in bookings %}
+            <li>ID: {{ booking.id }}, User ID: {{ booking.user_id }}, Room ID: {{ booking.room_id }}, Check-in: {{ booking.check_in_date }}, Check-out: {{ booking.check_out_date }}, Guests: {{ booking.guests }}, Discount: {{ booking.discount }}</li>
         {% endfor %}
     </ul>
 </body>
