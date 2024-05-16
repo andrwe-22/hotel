@@ -5,15 +5,19 @@ import mysql.connector
 from flask import json
 
 from app import app
+from models import db
 
 
 def initialize_database():
     # Connect to the database
+
     connection = mysql.connector.connect(
         host='localhost',
         user='root',
         password='root',
         database='hotel'
+
+
     )
 
     # MySQL configurations
@@ -101,6 +105,9 @@ def initialize_database():
 
     cursor.close()
     connection.close()
-
+def initialize_database():
+    with app.app_context():
+        # Create all tables
+        db.create_all()
 if __name__ == '__main__':
     initialize_database()

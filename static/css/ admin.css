@@ -1,0 +1,61 @@
+/* Style for the body */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Style for headings */
+h1, h2, h3 {
+    color: #333;
+}
+
+/* Style for forms */
+form {
+    margin-bottom: 20px;
+}
+
+/* Style for form labels */
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Style for form inputs */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* Style for submit buttons */
+input[type="submit"] {
+    width: auto;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+/* Style for lists */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* Style for list items */
+li {
+    margin-bottom: 10px;
+}

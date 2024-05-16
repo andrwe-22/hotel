@@ -1,0 +1,113 @@
+<!-- admin.html-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href=/static/css/admin.css>
+    <title>Admin Page</title>
+</head>
+<body>
+    <h1>Welcome to the Admin Page</h1>
+
+    <!-- Form for adding new data -->
+    <h2>Add New Data</h2>
+
+    <!-- Add Room Form -->
+    <h3>Add Room</h3>
+    <form action="/add_data" method="POST">
+        <input type="hidden" name="data_type" value="room">
+        <label for="room_number">Room Number:</label>
+        <input type="text" id="room_number" name="room_number" required><br>
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description" required><br>
+        <label for="price_per_night">Price per Night:</label>
+        <input type="text" id="price_per_night" name="price_per_night" required><br>
+        <label for="hotel_id">Hotel ID:</label>
+        <input type="text" id="hotel_id" name="hotel_id" required><br>
+
+        <input type="submit" value="Add Room">
+    </form>
+
+    <!-- Add User Form -->
+    <h3>Add User</h3>
+    <form action="/add_data" method="POST">
+        <input type="hidden" name="data_type" value="user">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br>
+
+        <input type="submit" value="Add User">
+    </form>
+
+    <!-- Add Hostel Form -->
+    <h3>Add Hostel</h3>
+    <form action="/add_data" method="POST">
+        <input type="hidden" name="data_type" value="hostel">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br>
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address" required><br>
+        <label for="phone_number">Phone Number:</label>
+        <input type="text" id="phone_number" name="phone_number" required><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br>
+
+        <input type="submit" value="Add Hostel">
+    </form>
+
+
+    <!-- Form for updating data -->
+    <h2>Update Price</h2>
+    <form action="/update_price" method="POST">
+        <label for="room_id">Room ID:</label>
+        <input type="text" id="room_id" name="room_id" required><br>
+        <label for="new_price">New Price:</label>
+        <input type="text" id="new_price" name="new_price" required><br>
+
+        <input type="submit" value="Update Price">
+    </form>
+
+
+    <!-- Form for deleting data -->
+    <h2>Delete Data</h2>
+    <form action="/delete_data" method="POST">
+        <label for="data_id">Data ID:</label>
+        <input type="text" id="data_id" name="data_id" required><br>
+        <label for="data_type">Data Type:</label>
+        <select id="data_type" name="data_type" required>
+            <option value="user">User</option>
+            <option value="room">Room</option>
+            <option value="hostel">Hostel</option>
+        </select><br>
+
+        <input type="submit" value="Delete Data">
+    </form>
+
+    <!-- Display existing data -->
+    <h2>Existing Data</h2>
+    <h3>Users</h3>
+    <ul>
+        {% for user in users %}
+            <li>ID: {{ user.id }}, Username: {{ user.username }}, Name: {{ user.name }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Rooms</h3>
+    <ul>
+        {% for room in rooms %}
+            <li>ID: {{ room.id }}, Room Number: {{ room.room_number }}, Description: {{ room.description }}, Price per Night: {{ room.price_per_night }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Hostels</h3>
+    <ul>
+        {% for hostel in hostels %}
+            <li>ID: {{ hostel.id }}, Name: {{ hostel.name }}, Address: {{ hostel.address }}, Phone: {{ hostel.phone_number }}, Email: {{ hostel.email }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

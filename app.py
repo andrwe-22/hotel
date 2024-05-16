@@ -1,15 +1,20 @@
-# app.py
+#app.py
 
 import secrets
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 import mysql.connector
-import secrets
 import json
 import os
 
+from flask import Flask, render_template, request, redirect
+from flask_sqlalchemy import SQLAlchemy
+from models import Hostels, Rooms, Users, Bookings  # Import models directly
+from models import db, CustomData
+
+
+# Define the Flask app instance
 app = Flask(__name__, template_folder='templates')
 app.secret_key = secrets.token_hex(16)
+app.secret_key = 'root'  # Необходимо изменить на ваш секретный ключ
 
 # MySQL configurations
 app.config['MYSQL_HOST'] = 'localhost'
@@ -19,8 +24,12 @@ app.config['MYSQL_DB'] = 'hotel'
 
 # Set the SQLAlchemy database URI
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost/hotel'
+# Set SQLAlchemy configurations
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Initialize MySQL
+# Initialize SQLAlchemy
+
+db.init_app(app)
 try:
     # Attempt to connect to the database
     mysql = mysql.connector.connect(
@@ -32,7 +41,6 @@ try:
     print("Connected to the database successfully.")
 except Exception as e:
     print(f"Error connecting to the database: {e}")
-
 
 # Create a cursor to interact with the database
 cursor = mysql.cursor(dictionary=True)
@@ -46,5 +54,10 @@ if os.path.exists(file_path):
     with open(file_path, 'r') as file:
         comments = json.load(file)
 
-# Initialize SQLAlchemy
-db = SQLAlchemy(app)
+
+
+
+
+
+if __name__ == '__main__':
+    app.run(debug=True)

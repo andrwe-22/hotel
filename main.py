@@ -1,7 +1,7 @@
+#main.py
+
 from app import app
 from db_init import initialize_database
-
-
 from routes import *
 
 
