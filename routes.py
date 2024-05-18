@@ -367,4 +367,20 @@ def update_price():
 
     return redirect('/admin')
 
+from flask import jsonify
+
+@app.route('/api/room/<int:room_id>', methods=['GET'])
+def get_room(room_id):
+    room = Rooms.query.get(room_id)
+    if room:
+        room_data = {
+            'room_number': room.room_number,
+            'description': room.description,
+            'price_per_night': str(room.price_per_night),
+            'hotel_id': room.hotel_id
+        }
+        return jsonify(room_data)
+    else:
+        return jsonify({'error': 'Room not found'}), 404
+
 
