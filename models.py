@@ -1,16 +1,18 @@
 # models.py
 
-from flask import Flask, render_template, request, redirect
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
 app = Flask(__name__, template_folder='templates')
-app.secret_key = 'root'  # Необходимо изменить на ваш секретный ключ
+app.secret_key = 'root'  # Replace with your secret key
 
-# Настройки базы данных SQLAlchemy
+# SQLAlchemy Database Configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost/hotel'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+db.init_app(app)
 
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -24,7 +26,8 @@ class Rooms(db.Model):
     room_number = db.Column(db.Integer, nullable=False)
     description = db.Column(db.Text)
     price_per_night = db.Column(db.DECIMAL(10, 2), nullable=False)
-    hotel_id = db.Column(db.Integer, db.ForeignKey('hostels.id'))  # Add this line
+    quantity = db.Column(db.Integer, nullable=False, default=1)
+    hotel_id = db.Column(db.Integer, db.ForeignKey('hostels.id'))
     bookings = db.relationship('Bookings', backref='room', lazy=True)
 
 class Hostels(db.Model):
@@ -33,6 +36,7 @@ class Hostels(db.Model):
     address = db.Column(db.String(255), nullable=False)
     phone_number = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(255), nullable=False)
+    rooms = db.relationship('Rooms', backref='hostel', lazy=True)
 
 class Bookings(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -42,10 +46,10 @@ class Bookings(db.Model):
     check_out_date = db.Column(db.Date, nullable=False)
     guests = db.Column(db.Integer, nullable=False)
     discount = db.Column(db.DECIMAL(10, 2))
-
-
+    price = db.Column(db.DECIMAL(10, 2), nullable=False)
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 class CustomData:
     query = None

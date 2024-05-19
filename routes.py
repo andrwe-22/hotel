@@ -9,6 +9,7 @@ from app import app, cursor, mysql, db
 from models import CustomData, Users, Rooms, Hostels, Bookings
 
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask import jsonify
 
 
 def get_room_id_by_name(room_number):
@@ -68,8 +69,9 @@ def registration():
         return redirect(url_for('login'))
 
     return render_template('registration.html')
+import random  # for simulating hostel occupancy
 
-
+# Update the /book route to calculate the total price after discount
 @app.route('/book', methods=['POST'])
 def book():
     if request.method == 'POST':
@@ -86,31 +88,57 @@ def book():
             return redirect(url_for('login'))
 
         if room_id is None:
-            # Handle the case when the room is not found, for example, redirect to an error page
-            return render_template('booking_success.html')
+            return render_template('booking_error.html', message="Room not found")
 
-        query = "INSERT INTO bookings (user_id, room_id, check_in_date, check_out_date, guests) VALUES (%s, %s, %s, %s, %s)"
-        cursor.execute(query, (user_id, room_id, check_in, check_out, guests))
-        mysql.commit()
+        # Retrieve the room price
+        cursor.execute("SELECT price_per_night FROM rooms WHERE id = %s", (room_id,))
+        room = cursor.fetchone()
+        if room is None:
+            return render_template('booking_error.html', message="Room not found")
 
+        # Convert price_per_night to float before calculation
+        price_per_night_float = float(room['price_per_night'])
+
+        # Calculate total duration of stay in days
         duration_in_days = (datetime.strptime(check_out, '%Y-%m-%d') - datetime.strptime(check_in, '%Y-%m-%d')).days
 
-        discount = 0.0  # Default discount is 0%
+        # Simulate hostel occupancy (for demonstration purposes)
+        hostel_occupancy = random.uniform(0, 1)  # Simulating occupancy percentage (between 0 and 1)
 
-        # Apply discount based on the duration of stay
+        # Calculate discount based on hostel occupancy
+        if hostel_occupancy >= 0.6:  # 60% or more occupancy
+            discount = 0.25
+        elif hostel_occupancy >= 0.35:  # 35% or more occupancy
+            discount = 0.15
+        else:
+            discount = 0.0
+
+        # Apply additional discounts based on other conditions
+
+        # Discount based on duration
         if duration_in_days > 5 and duration_in_days <= 10:
-            discount = 0.05  # 5% discount for stays longer than 5 days but less than or equal to 10 days
+            discount += 0.05
         elif duration_in_days > 10:
-            discount = 0.10  # 10% discount for stays longer than 10 days
+            discount += 0.10
 
-        # Update the discount in the database for the current booking
-        query_discount = "UPDATE bookings SET discount = %s WHERE id = %s"
-        cursor.execute(query_discount, (discount, cursor.lastrowid))
+        # Discount for high number of guests
+        if guests > 5:
+            discount += 0.05
+
+        # Check if it's a holiday period (for demonstration purposes, let's assume Christmas)
+        if datetime.now().month == 12:  # December (Christmas)
+            discount += 0.05
+
+        # Calculate the total price after discount
+        total_price = price_per_night_float * duration_in_days * guests * (1 - discount)
+
+        # Insert booking into the database including the price and discount
+        query = "INSERT INTO bookings (user_id, room_id, check_in_date, check_out_date, guests, price, discount) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+        cursor.execute(query, (user_id, room_id, check_in, check_out, guests, total_price, discount))
         mysql.commit()
 
         return render_template('booking_success.html')
 
-    # Handle other HTTP methods or redirect to the booking form if not a POST request
     return redirect(url_for('booking_form'))
 
 
@@ -134,7 +162,6 @@ def book_room():
         mysql.commit()
 
         return render_template('booking_success.html')
-
 
 # Logout Route
 @app.route('/logout')
@@ -293,10 +320,11 @@ def add_data():
         room_number = request.form['room_number']
         description = request.form['description']
         price_per_night = request.form['price_per_night']
+        quantity = request.form['quantity']
         hotel_id = request.form['hotel_id']
 
         # Insert room data into the Rooms table
-        new_room = Rooms(room_number=room_number, description=description, price_per_night=price_per_night, hotel_id=hotel_id)
+        new_room = Rooms(room_number=room_number, description=description, price_per_night=price_per_night,  quantity=quantity , hotel_id=hotel_id)
         db.session.add(new_room)
         db.session.commit()
     elif data_type == 'hostel':
@@ -367,7 +395,7 @@ def update_price():
 
     return redirect('/admin')
 
-from flask import jsonify
+
 
 @app.route('/api/room/<int:room_id>', methods=['GET'])
 def get_room(room_id):
@@ -377,6 +405,7 @@ def get_room(room_id):
             'room_number': room.room_number,
             'description': room.description,
             'price_per_night': str(room.price_per_night),
+            'quantity': room.quantity,
             'hotel_id': room.hotel_id
         }
         return jsonify(room_data)

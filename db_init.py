@@ -1,23 +1,16 @@
-# db_init.py
-
 import os
 import mysql.connector
 from flask import json
-
 from app import app
 from models import db
 
-
 def initialize_database():
     # Connect to the database
-
     connection = mysql.connector.connect(
         host='localhost',
         user='root',
         password='root',
         database='hotel'
-
-
     )
 
     # MySQL configurations
@@ -28,7 +21,6 @@ def initialize_database():
 
     # Initialize MySQL
     try:
-        # Attempt to connect to the database
         connection = mysql.connector.connect(
             host=app.config['MYSQL_HOST'],
             user=app.config['MYSQL_USER'],
@@ -39,7 +31,6 @@ def initialize_database():
     except Exception as e:
         print(f"Error connecting to the database: {e}")
 
-    # Create a cursor to interact with the database
     cursor = connection.cursor(dictionary=True)
 
     # Initialize an empty list to store comments
@@ -62,18 +53,21 @@ def initialize_database():
     """)
     connection.commit()
 
-    # Add this code block after creating the 'users' table
+    # Create Rooms table in the database
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS rooms (
             id INT AUTO_INCREMENT PRIMARY KEY,
             room_number INT NOT NULL,
             description TEXT,
-            price_per_night DECIMAL(10, 2) NOT NULL
+            price_per_night DECIMAL(10, 2) NOT NULL,
+            quantity INT NOT NULL DEFAULT 1,
+            hotel_id INT,
+            FOREIGN KEY (hotel_id) REFERENCES hostels(id)
         )
     """)
     connection.commit()
 
-    # Add this code block after creating the 'rooms' table
+    # Create Hostels table in the database
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS hostels (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -85,8 +79,6 @@ def initialize_database():
     """)
     connection.commit()
 
-    # Add this code block after creating the 'hostels' table
-
     # Create Bookings table in the database
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS bookings (
@@ -97,6 +89,7 @@ def initialize_database():
             check_out_date DATE NOT NULL,
             guests INT NOT NULL,
             discount DECIMAL(10, 2),
+            price DECIMAL(10, 2) NOT NULL,
             FOREIGN KEY (user_id) REFERENCES users(id),
             FOREIGN KEY (room_id) REFERENCES rooms(id)
         )
@@ -105,9 +98,10 @@ def initialize_database():
 
     cursor.close()
     connection.close()
+
 def initialize_database():
     with app.app_context():
-        # Create all tables
         db.create_all()
+
 if __name__ == '__main__':
     initialize_database()

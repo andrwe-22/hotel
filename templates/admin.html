@@ -126,10 +126,10 @@
 
     <h3>Rooms</h3>
     <ul>
-        {% for room in rooms %}
-            <li>ID: {{ room.id }}, Room Number: {{ room.room_number }}, Description: {{ room.description }}, Price per Night: {{ room.price_per_night }}</li>
-        {% endfor %}
-    </ul>
+    {% for room in rooms %}
+        <li>ID: {{ room.id }}, Room Number: {{ room.room_number }}, Description: {{ room.description }}, Price per Night: {{ room.price_per_night }}, Quantity: {{ room.quantity }}</li>
+    {% endfor %}
+</ul>
 
     <h3>Hostels</h3>
     <ul>
