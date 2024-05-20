@@ -141,7 +141,7 @@
     <h3>Bookings</h3>
     <ul>
         {% for booking in bookings %}
-            <li>ID: {{ booking.id }}, User ID: {{ booking.user_id }}, Room ID: {{ booking.room_id }}, Check-in: {{ booking.check_in_date }}, Check-out: {{ booking.check_out_date }}, Guests: {{ booking.guests }}, Discount: {{ booking.discount }}</li>
+            <li>ID: {{ booking.id }}, User ID: {{ booking.user_id }}, Room ID: {{ booking.room_id }}, Check-in: {{ booking.check_in_date }}, Check-out: {{ booking.check_out_date }}, Guests: {{ booking.guests }}, Discount: {{ booking.discount }}, Price: {{ booking.price }} </li>
         {% endfor %}
     </ul>
 </body>
