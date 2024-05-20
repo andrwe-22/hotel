@@ -69,9 +69,10 @@ def registration():
         return redirect(url_for('login'))
 
     return render_template('registration.html')
-import random  # for simulating hostel occupancy
 
+import random  # for simulating hostel occupancy
 # Update the /book route to calculate the total price after discount
+
 @app.route('/book', methods=['POST'])
 def book():
     if request.method == 'POST':
@@ -102,15 +103,15 @@ def book():
         # Calculate total duration of stay in days
         duration_in_days = (datetime.strptime(check_out, '%Y-%m-%d') - datetime.strptime(check_in, '%Y-%m-%d')).days
 
-        # Simulate hostel occupancy (for demonstration purposes)
-        hostel_occupancy = random.uniform(0, 1)  # Simulating occupancy percentage (between 0 and 1)
+        # Simulate hostel occupancy (between 0 and 1)
+        hostel_occupancy = random.uniform(0, 1)  # Simulate hostel occupancy percentage (between 0 and 1)
 
         # Calculate discount based on hostel occupancy
-        if hostel_occupancy >= 0.6:  # 60% or more occupancy
-            discount = 0.25
-        elif hostel_occupancy >= 0.35:  # 35% or more occupancy
-            discount = 0.15
-        else:
+        if hostel_occupancy < 0.35:  # Less than 35% occupancy
+            discount = 0.14
+        elif hostel_occupancy < 0.5:  # Less than 50% occupancy but more than or equal to 35%
+            discount = 0.07
+        else:  # 50% or more occupancy
             discount = 0.0
 
         # Apply additional discounts based on other conditions
@@ -119,15 +120,19 @@ def book():
         if duration_in_days > 5 and duration_in_days <= 10:
             discount += 0.05
         elif duration_in_days > 10:
-            discount += 0.10
+            discount += 0.07
 
         # Discount for high number of guests
-        if guests > 5:
+        if guests > 3:
             discount += 0.05
 
         # Check if it's a holiday period (for demonstration purposes, let's assume Christmas)
         if datetime.now().month == 12:  # December (Christmas)
             discount += 0.05
+
+        # Ensure the maximum discount does not exceed 20%
+        if discount > 0.17:
+            discount = 0.17
 
         # Calculate the total price after discount
         total_price = price_per_night_float * duration_in_days * guests * (1 - discount)

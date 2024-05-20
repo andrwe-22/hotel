@@ -36,13 +36,40 @@ function calculatePrice() {
         var totalPrice = durationInDays * pricePerNight * guests;
         var discount = 0.0; // Default discount is 0%
 
-        // Apply additional pricing rules based on the duration of stay
+
+        // Simulate hostel occupancy (between 0 and 1)
+        var hostelOccupancy = Math.random(); // Generate a random number between 0 and 1
+
+        // Calculate discount based on hostel occupancy
+        if (hostelOccupancy < 0.35) {  // Less than 35% occupancy
+            discount = 0.14;
+        } else if (hostelOccupancy < 0.5) {  // Less than 50% occupancy but more than or equal to 35%
+            discount = 0.07;
+        } else {  // 50% or more occupancy
+            discount = 0.0;
+        }
+
+
+        // Apply discount based on duration
         if (durationInDays > 5 && durationInDays <= 10) {
-            // Apply a 5% discount for stays longer than 5 days but less than or equal to 10 days
-            discount = 0.05;
+            discount += 0.03;
         } else if (durationInDays > 10) {
-            // Apply a 10% discount for stays longer than 10 days
-            discount = 0.10;
+            discount += 0.07;
+        }
+
+        // Discount for high number of guests
+        if (guests > 3) {
+            discount += 0.02;
+        }
+
+        // Check if it's a holiday period (for demonstration purposes, let's assume December as Christmas)
+        if (new Date().getMonth() === 12) {  // December (0-based index, 11 is December)
+            discount += 0.05;
+        }
+
+        // Ensure the maximum discount does not exceed 20%
+        if (discount > 0.17) {
+            discount = 0.17;
         }
 
         totalPrice -= totalPrice * discount; // Apply the discount
