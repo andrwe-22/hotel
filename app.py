@@ -8,7 +8,7 @@ import os
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from models import Hostels, Rooms, Users, Bookings  # Import models directly
-from models import db, CustomData
+from models import db, Settings, CustomData
 
 
 # Define the Flask app instance

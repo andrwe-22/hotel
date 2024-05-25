@@ -1,8 +1,10 @@
+# dp_init.py
+
 import os
 import mysql.connector
 from flask import json
 from app import app
-from models import db
+from models import db, Settings
 
 def initialize_database():
     # Connect to the database
@@ -81,20 +83,40 @@ def initialize_database():
 
     # Create Bookings table in the database
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS bookings (
+         CREATE TABLE IF NOT EXISTS bookings (
+             id INT AUTO_INCREMENT PRIMARY KEY,
+             user_id INT NOT NULL,
+             room_id INT NOT NULL,
+             check_in_date DATE NOT NULL,
+             check_out_date DATE NOT NULL,
+             guests INT NOT NULL,
+             discount DECIMAL(10, 2),
+             price DECIMAL(10, 2) NOT NULL,
+             settings_id INT,  # Добавлено новое поле для внешнего ключа
+             FOREIGN KEY (user_id) REFERENCES users(id),
+             FOREIGN KEY (room_id) REFERENCES rooms(id),
+            
+         )
+    """)
+    connection.commit()
+
+    # Create Settings table in the database
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS settings (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            user_id INT NOT NULL,
-            room_id INT NOT NULL,
-            check_in_date DATE NOT NULL,
-            check_out_date DATE NOT NULL,
-            guests INT NOT NULL,
-            discount DECIMAL(10, 2),
-            price DECIMAL(10, 2) NOT NULL,
-            FOREIGN KEY (user_id) REFERENCES users(id),
-            FOREIGN KEY (room_id) REFERENCES rooms(id)
+            name VARCHAR(255) NOT NULL,
+            value BOOLEAN NOT NULL
         )
     """)
     connection.commit()
+
+    # Insert default settings if they do not exist
+    cursor.execute("SELECT COUNT(*) as count FROM settings")
+    count = cursor.fetchone()['count']
+    if count == 0:
+        cursor.execute("INSERT INTO settings (name, value) VALUES ('enable_discounts', TRUE)")
+        cursor.execute("INSERT INTO settings (name, value) VALUES ('enable_partial_discounts', TRUE)")
+        connection.commit()
 
     cursor.close()
     connection.close()
@@ -102,6 +124,23 @@ def initialize_database():
 def initialize_database():
     with app.app_context():
         db.create_all()
+
+        # Check if settings already exist to avoid duplicate entries
+        if not Settings.query.first():
+            default_settings = [
+                Settings(name='enable_discounts', value=True),
+                Settings(name='enable_partial_discounts', value=True)
+            ]
+
+            # Add settings individually
+            for setting in default_settings:
+                db.session.add(setting)
+            try:
+                db.session.commit()
+                print("Database initialized with settings.")
+            except Exception as e:
+                db.session.rollback()
+                print(f"Error initializing database settings: {e}")
 
 if __name__ == '__main__':
     initialize_database()

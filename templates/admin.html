@@ -4,10 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/static/css/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>Admin Page</title>
 </head>
 <body>
     <h1>Welcome to the Admin Page</h1>
+
+    <!-- Display overall occupancy -->
+    <h2>Overall Occupancy</h2>
+    <p>Current overall occupancy: {{ overall_occupancy }}%</p>
 
     <!-- Form for adding new data -->
     <h2>Add New Data</h2>
@@ -16,19 +21,21 @@
         <!-- Add Room Form -->
         <div class="form-column">
             <h3>Add Room</h3>
-            <form action="/add_data" method="POST">
-                <input type="hidden" name="data_type" value="room">
-                <label for="room_number">Room Number:</label>
-                <input type="text" id="room_number" name="room_number" required><br>
-                <label for="description">Description:</label>
-                <input type="text" id="description" name="description" required><br>
-                <label for="price_per_night">Price per Night:</label>
-                <input type="text" id="price_per_night" name="price_per_night" required><br>
-                <label for="hotel_id">Hotel ID:</label>
-                <input type="text" id="hotel_id" name="hotel_id" required><br>
+<form action="/add_data" method="POST">
+    <input type="hidden" name="data_type" value="room">
+    <label for="room_number">Room Number:</label>
+    <input type="text" id="room_number" name="room_number" required><br>
+    <label for="description">Description:</label>
+    <input type="text" id="description" name="description" required><br>
+    <label for="price_per_night">Price per Night:</label>
+    <input type="text" id="price_per_night" name="price_per_night" required><br>
+    <label for="quantity">Quantity:</label> <!-- Added quantity field -->
+    <input type="text" id="quantity" name="quantity" required><br>
+    <label for="hotel_id">Hotel ID:</label>
+    <input type="text" id="hotel_id" name="hotel_id" required><br>
 
-                <input type="submit" value="Add Room">
-            </form>
+    <input type="submit" value="Add Room">
+</form>
         </div>
 
         <!-- Add User Form -->
@@ -114,6 +121,82 @@
 
         <input type="submit" value="Delete Data">
     </form>
+
+    <!-- Form for updating discount settings -->
+
+    <h2>Discount Settings</h2>
+    <form action="/update_settings" method="POST">
+        <label for="enable_discounts">Enable Discounts:</label>
+        <input type="checkbox" id="enable_discounts" name="enable_discounts" {% if settings[0].value %}checked{% endif %}><br>
+
+        <label for="enable_partial_discounts">Enable Partial Discounts:</label>
+        <input type="checkbox" id="enable_partial_discounts" name="enable_partial_discounts" {% if settings[1].value %}checked{% endif %}><br>
+
+        <input type="submit" value="Update Settings">
+    </form>
+
+
+<!-- Table for booking percentages --> <!-- Table for booking percentages -->
+    <h2>Booking Percentages</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Room Number</th>
+                <th>Booking Percentage</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in range(room_bookings|length) %}
+                <tr>
+                    <td>{{ room_bookings[i][0].room_number }}</td>
+                    <td>{{ booking_percentages[i] }}%</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td>All Rooms</td>
+                <td>{{ overall_occupancy }}%</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Debug Data -->
+    <h2>Debug Data</h2>
+    <pre>
+        Labels: [{% for room, _ in room_bookings %}'{{ room.room_number }}'{% if not loop.last %}, {% endif %}{% endfor %}, 'All Rooms']
+        Data: [{% for room, bookings_count in room_bookings %}{{ (bookings_count / room.quantity) * 100 if room.quantity > 0 else 0 }}{% if not loop.last %}, {% endif %}{% endfor %}, {{ overall_occupancy }}]
+    </pre>
+
+    <!-- Chart for booking percentages -->
+    <h2>Booking Percentages Chart</h2>
+    <canvas id="bookingChart" width="400" height="200"></canvas>
+
+    <script>
+        var roomNumbers = {{ room_numbers | tojson }};
+        var bookingPercentages = {{ booking_percentages | tojson }};
+        var roomData = {{ room_bookings_json | safe }};
+
+        var ctx = document.getElementById('bookingChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: roomNumbers,
+                datasets: [{
+                    label: 'Booking Percentage',
+                    data: bookingPercentages,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
 
     <!-- Display existing data -->
     <h2>Existing Data</h2>

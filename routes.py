@@ -1,11 +1,11 @@
 # routes.py
-
+import json
 from datetime import datetime
 
 from flask import render_template, request, redirect, url_for, session
 
 
-from app import app, cursor, mysql, db
+from app import app, cursor, mysql, db ,Settings
 from models import CustomData, Users, Rooms, Hostels, Bookings
 
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -70,83 +70,83 @@ def registration():
 
     return render_template('registration.html')
 
+
+
+@app.route('/update_settings', methods=['POST'])
+def update_settings():
+    enable_discounts = 'enable_discounts' in request.form
+    enable_partial_discounts = 'enable_partial_discounts' in request.form
+
+    Settings.query.filter_by(name='enable_discounts').update({'value': enable_discounts})
+    Settings.query.filter_by(name='enable_partial_discounts').update({'value': enable_partial_discounts})
+    db.session.commit()
+
+    return redirect('/admin')
+
 import random  # for simulating hostel occupancy
 # Update the /book route to calculate the total price after discount
-
 @app.route('/book', methods=['POST'])
 def book():
-    if request.method == 'POST':
-        room_name = request.form['room']
-        room_id = get_room_id_by_name(room_name)
+    room_name = request.form['room']
+    room_id = get_room_id_by_name(room_name)
 
-        check_in = request.form['check-in']
-        check_out = request.form['check-out']
-        guests = int(request.form['guests'])
+    check_in = request.form['check-in']
+    check_out = request.form['check-out']
+    guests = int(request.form['guests'])
 
-        user_id = session.get('user_id')
+    user_id = session.get('user_id')
 
-        if user_id is None:
-            return redirect(url_for('login'))
+    if user_id is None:
+        return redirect(url_for('login'))
 
-        if room_id is None:
-            return render_template('booking_error.html', message="Room not found")
+    if room_id is None:
+        return render_template('booking_error.html', message="Room not found")
 
-        # Retrieve the room price
-        cursor.execute("SELECT price_per_night FROM rooms WHERE id = %s", (room_id,))
-        room = cursor.fetchone()
-        if room is None:
-            return render_template('booking_error.html', message="Room not found")
+    room = Rooms.query.get(room_id)
+    if room is None:
+        return render_template('booking_error.html', message="Room not found")
 
-        # Convert price_per_night to float before calculation
-        price_per_night_float = float(room['price_per_night'])
+    price_per_night = float(room.price_per_night)
+    duration_in_days = (datetime.strptime(check_out, '%Y-%m-%d') - datetime.strptime(check_in, '%Y-%m-%d')).days
 
-        # Calculate total duration of stay in days
-        duration_in_days = (datetime.strptime(check_out, '%Y-%m-%d') - datetime.strptime(check_in, '%Y-%m-%d')).days
+    hostel_occupancy = random.uniform(0, 1)
+    discount = 0.0
 
-        # Simulate hostel occupancy (between 0 and 1)
-        hostel_occupancy = random.uniform(0, 1)  # Simulate hostel occupancy percentage (between 0 and 1)
+    enable_discounts = Settings.query.filter_by(name='enable_discounts').first().value
+    enable_partial_discounts = Settings.query.filter_by(name='enable_partial_discounts').first().value
 
-        # Calculate discount based on hostel occupancy
-        if hostel_occupancy < 0.35:  # Less than 35% occupancy
-            discount = 0.14
-        elif hostel_occupancy < 0.5:  # Less than 50% occupancy but more than or equal to 35%
-            discount = 0.07
-        else:  # 50% or more occupancy
-            discount = 0.0
-
-        # Apply additional discounts based on other conditions
-
-        # Discount based on duration
-        if duration_in_days > 5 and duration_in_days <= 10:
-            discount += 0.05
-        elif duration_in_days > 10:
+    if enable_discounts:
+        if hostel_occupancy < 0.35:
+            discount += 0.14
+        elif hostel_occupancy < 0.5:
             discount += 0.07
 
-        # Discount for high number of guests
-        if guests > 3:
-            discount += 0.05
+        if enable_partial_discounts:
+            if duration_in_days > 5 and duration_in_days <= 10:
+                discount += 0.05
+            elif duration_in_days > 10:
+                discount += 0.07
 
-        # Check if it's a holiday period (for demonstration purposes, let's assume Christmas)
-        if datetime.now().month == 12:  # December (Christmas)
-            discount += 0.05
+            if guests > 3:
+                discount += 0.05
 
-        # Ensure the maximum discount does not exceed 20%
-        if discount > 0.17:
-            discount = 0.17
+            if datetime.now().month == 12:
+                discount += 0.05
 
-        # Calculate the total price after discount
-        total_price = price_per_night_float * duration_in_days * guests * (1 - discount)
+            if discount > 0.17:
+                discount = 0.17
 
-        # Insert booking into the database including the price and discount
-        query = "INSERT INTO bookings (user_id, room_id, check_in_date, check_out_date, guests, price, discount) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-        cursor.execute(query, (user_id, room_id, check_in, check_out, guests, total_price, discount))
-        mysql.commit()
+    total_price = price_per_night * duration_in_days * guests * (1 - discount)
 
-        return render_template('booking_success.html')
+    new_booking = Bookings(user_id=user_id, room_id=room_id, check_in_date=check_in, check_out_date=check_out, guests=guests, price=total_price, discount=discount)
+    db.session.add(new_booking)
+    db.session.commit()
 
-    return redirect(url_for('booking_form'))
+    return render_template('booking_success.html')
 
-
+def get_room_id_by_name(room_name):
+    room = Rooms.query.filter_by(room_number=room_name).first()
+    return room.id if room else None
 @app.route('/book', methods=['POST'])
 def book_room():
     if request.method == 'POST':
@@ -255,38 +255,102 @@ def double_room():
 @app.route('/Suiteroom')
 def suite_room():
     return render_template('Suiteroom.html')
+
+
+
+
 # Update the get_room_price() function to use SQLAlchemy queries
 
-
-@app.route('/admin')
+def serialize_room(room):
+    """Convert a Room object to a dictionary."""
+    return {
+        'id': room.id,
+        'room_number': room.room_number,
+        'description': room.description,
+        'price_per_night': room.price_per_night,
+        'quantity': room.quantity,
+        'hotel_id': room.hotel_id
+    }
+@app.route('/admin', methods=['GET', 'POST'])
 def admin_dashboard():
     # Check if the user is logged in
     if 'logged_in' not in session:
-        return redirect(url_for('login'))  # Redirect unauthorized users to login
+        return redirect(url_for('login'))
 
-    # Получаем данные для отображения в админской панели
+    if request.method == 'POST':
+        # Update settings based on admin input
+        enable_discounts = request.form.get('enable_discounts') == 'on'
+        enable_partial_discounts = request.form.get('enable_partial_discounts') == 'on'
+
+        discount_setting = Settings.query.filter_by(name='enable_discounts').first()
+        discount_setting.value = enable_discounts
+
+        partial_discount_setting = Settings.query.filter_by(name='enable_partial_discounts').first()
+        partial_discount_setting.value = enable_partial_discounts
+
+        db.session.commit()
+
+    # Retrieve settings for display
+    settings = Settings.query.all()
+
+    # Get data for the admin dashboard
     users = Users.query.all()
     rooms = Rooms.query.all()
     hostels = Hostels.query.all()
     bookings = Bookings.query.all()
 
-    # Передаем данные на шаблон admin.html
-    return render_template('admin.html', users=users, rooms=rooms, hostels=hostels, bookings=bookings)
+    # Calculate booking data for each room
+    room_bookings = []
+    total_booked = 0
+    total_rooms = 0
 
+    for room in rooms:
+        bookings_count = Bookings.query.filter_by(room_id=room.id).count()
+        total_booked += bookings_count
+        total_rooms += room.quantity
+        room_bookings.append((room, bookings_count))
 
+    # Calculate overall occupancy rate
+    overall_occupancy = round((total_booked / total_rooms) * 100, 2) if total_rooms > 0 else 0
+
+    # Prepare data for the chart
+    room_numbers = [room.room_number for room, _ in room_bookings] + ['All Rooms']
+    booking_percentages = [round((bookings_count / room.quantity) * 100, 2) if room.quantity > 0 else 0 for room, bookings_count in room_bookings] + [overall_occupancy]
+
+    # Convert room bookings to a JSON serializable format
+    room_bookings_serializable = [(serialize_room(room), bookings_count) for room, bookings_count in room_bookings]
+    room_bookings_json = json.dumps(room_bookings_serializable)
+
+    # Pass data to the template
+    return render_template('admin.html', users=users, rooms=rooms, hostels=hostels, bookings=bookings, settings=settings, room_bookings=room_bookings, room_numbers=room_numbers, booking_percentages=booking_percentages, room_bookings_json=room_bookings_json, overall_occupancy=overall_occupancy)
 
 
 # Route for the admin page
 @app.route('/admin')
 def admin():
-    # Получаем данные для отображения в админской панели
     users = Users.query.all()
     rooms = Rooms.query.all()
     hostels = Hostels.query.all()
     bookings = Bookings.query.all()
+    settings = Settings.query.all()
+    return render_template('admin.html', users=users, rooms=rooms, hostels=hostels, bookings=bookings, settings=settings)
 
-    # Передаем данные на шаблон admin.html
-    return render_template('admin.html', users=users, rooms=rooms, hostels=hostels, bookings=bookings)
+@app.route('/admin', methods=['GET'])
+def admin_page():
+    # Получаем список комнат и данные о бронировании из базы данных
+    rooms = Rooms.query.all()
+
+    # Вычисляем данные о бронировании для каждой комнаты
+    room_bookings = []
+    for room in rooms:
+        # Получаем количество бронирований для данной комнаты
+        bookings_count = Bookings.query.filter_by(room_id=room.id).count()
+        # Добавляем данные о комнате и количестве бронирований в список
+        room_bookings.append((room, bookings_count))
+
+    # передаем данные на шаблон admin.html
+    return render_template('admin.html', room_bookings=room_bookings)
+
 
 # Route to handle form submission for modifying data
 @app.route('/update_data', methods=['POST'])
@@ -306,7 +370,6 @@ def update_data():
         return redirect('/error')
 
 # app.py
-
 @app.route('/add_data', methods=['POST'])
 def add_data():
     data_type = request.form.get('data_type')  # Assuming there's a form field for selecting data type
@@ -325,11 +388,11 @@ def add_data():
         room_number = request.form['room_number']
         description = request.form['description']
         price_per_night = request.form['price_per_night']
-        quantity = request.form['quantity']
+        quantity = request.form['quantity']  # Ensure quantity is retrieved
         hotel_id = request.form['hotel_id']
 
         # Insert room data into the Rooms table
-        new_room = Rooms(room_number=room_number, description=description, price_per_night=price_per_night,  quantity=quantity , hotel_id=hotel_id)
+        new_room = Rooms(room_number=room_number, description=description, price_per_night=price_per_night, quantity=quantity, hotel_id=hotel_id)
         db.session.add(new_room)
         db.session.commit()
     elif data_type == 'hostel':
@@ -353,12 +416,12 @@ def add_data():
         discount = request.form.get('discount')  # Optional field
 
         # Insert booking data into the Bookings table
-        new_booking = Bookings(user_id=user_id, room_id=room_id, check_in_date=check_in_date,
-                               check_out_date=check_out_date, guests=guests, discount=discount)
+        new_booking = Bookings(user_id=user_id, room_id=room_id, check_in_date=check_in_date, check_out_date=check_out_date, guests=guests, discount=discount)
         db.session.add(new_booking)
         db.session.commit()
 
     return redirect('/admin')  # Redirect to the admin page after adding the data
+
 @app.route('/delete_data', methods=['POST'])
 def delete_data():
     data_id = request.form.get('data_id')
