@@ -135,68 +135,46 @@
         <input type="submit" value="Update Settings">
     </form>
 
-
-<!-- Table for booking percentages --> <!-- Table for booking percentages -->
-    <h2>Booking Percentages</h2>
-    <table>
-        <thead>
+<!-- Table for booking percentages -->
+<h2>Booking Percentages</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Room Number</th>
+            <th>Booking Percentage</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for i in range(room_bookings|length) %}
             <tr>
-                <th>Room Number</th>
-                <th>Booking Percentage</th>
+                <td>{{ room_bookings[i][0].room_number }}</td>
+                <td>{{ booking_percentages[i] }}%</td>
             </tr>
-        </thead>
-        <tbody>
-            {% for i in range(room_bookings|length) %}
-                <tr>
-                    <td>{{ room_bookings[i][0].room_number }}</td>
-                    <td>{{ booking_percentages[i] }}%</td>
-                </tr>
-            {% endfor %}
-            <tr>
-                <td>All Rooms</td>
-                <td>{{ overall_occupancy }}%</td>
-            </tr>
-        </tbody>
-    </table>
+        {% endfor %}
+        <tr>
+            <td>All Rooms</td>
+            <td>{{ overall_occupancy }}%</td>
+        </tr>
+    </tbody>
+</table>
 
-    <!-- Debug Data -->
-    <h2>Debug Data</h2>
-    <pre>
-        Labels: [{% for room, _ in room_bookings %}'{{ room.room_number }}'{% if not loop.last %}, {% endif %}{% endfor %}, 'All Rooms']
-        Data: [{% for room, bookings_count in room_bookings %}{{ (bookings_count / room.quantity) * 100 if room.quantity > 0 else 0 }}{% if not loop.last %}, {% endif %}{% endfor %}, {{ overall_occupancy }}]
-    </pre>
+<!-- Debug Data -->
+<h2>Debug Data</h2>
+<pre>
+    Labels: [{% for room, _ in room_bookings %}'{{ room.room_number }}'{% if not loop.last %}, {% endif %}{% endfor %}, 'All Rooms']
+    Data: [{% for room, bookings_count in room_bookings %}{{ booking_percentages[loop.index0] }}{% if not loop.last %}, {% endif %}{% endfor %}, {{ overall_occupancy }}]
+</pre>
 
-    <!-- Chart for booking percentages -->
-    <h2>Booking Percentages Chart</h2>
-    <canvas id="bookingChart" width="400" height="200"></canvas>
+<!-- Chart for booking percentages -->
+<h2>Booking Percentages Chart</h2>
+<canvas id="bookingChart" width="400" height="200"></canvas>
 
-    <script>
+<script>
         var roomNumbers = {{ room_numbers | tojson }};
         var bookingPercentages = {{ booking_percentages | tojson }};
         var roomData = {{ room_bookings_json | safe }};
-
-        var ctx = document.getElementById('bookingChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: roomNumbers,
-                datasets: [{
-                    label: 'Booking Percentage',
-                    data: bookingPercentages,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
     </script>
+   <script src="/static/js/admin_page.js"></script>
 
     <!-- Display existing data -->
     <h2>Existing Data</h2>

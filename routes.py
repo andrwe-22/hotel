@@ -10,6 +10,7 @@ from models import CustomData, Users, Rooms, Hostels, Bookings
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import jsonify
+from datetime import datetime
 
 
 def get_room_id_by_name(room_number):
@@ -182,13 +183,9 @@ def index():
     if 'logged_in' not in session:
         return redirect(url_for('login'))  # Redirect unauthorized users to login
 
-
-
-
     # Fetch comments from the database
     cursor.execute("SELECT * FROM comments")
     comments = cursor.fetchall()
-
 
     # Render the index page with comments
     return render_template('index.html', comments=comments)
@@ -261,6 +258,9 @@ def suite_room():
 
 # Update the get_room_price() function to use SQLAlchemy queries
 
+
+
+
 def serialize_room(room):
     """Convert a Room object to a dictionary."""
     return {
@@ -271,6 +271,8 @@ def serialize_room(room):
         'quantity': room.quantity,
         'hotel_id': room.hotel_id
     }
+
+
 @app.route('/admin', methods=['GET', 'POST'])
 def admin_dashboard():
     # Check if the user is logged in
@@ -297,7 +299,10 @@ def admin_dashboard():
     users = Users.query.all()
     rooms = Rooms.query.all()
     hostels = Hostels.query.all()
-    bookings = Bookings.query.all()
+
+    # Filter bookings to include only those that haven't ended yet
+    today = datetime.today().date()
+    bookings = Bookings.query.filter(Bookings.check_out_date >= today).all()
 
     # Calculate booking data for each room
     room_bookings = []
@@ -305,7 +310,7 @@ def admin_dashboard():
     total_rooms = 0
 
     for room in rooms:
-        bookings_count = Bookings.query.filter_by(room_id=room.id).count()
+        bookings_count = Bookings.query.filter_by(room_id=room.id).filter(Bookings.check_out_date >= today).count()
         total_booked += bookings_count
         total_rooms += room.quantity
         room_bookings.append((room, bookings_count))
@@ -314,15 +319,19 @@ def admin_dashboard():
     overall_occupancy = round((total_booked / total_rooms) * 100, 2) if total_rooms > 0 else 0
 
     # Prepare data for the chart
-    room_numbers = [room.room_number for room, _ in room_bookings] + ['All Rooms']
-    booking_percentages = [round((bookings_count / room.quantity) * 100, 2) if room.quantity > 0 else 0 for room, bookings_count in room_bookings] + [overall_occupancy]
+    room_numbers = [room.room_number for room, _ in room_bookings]
+    booking_percentages = [round((bookings_count / room.quantity) * 100, 2) if room.quantity > 0 else 0 for
+                           room, bookings_count in room_bookings]
 
     # Convert room bookings to a JSON serializable format
     room_bookings_serializable = [(serialize_room(room), bookings_count) for room, bookings_count in room_bookings]
     room_bookings_json = json.dumps(room_bookings_serializable)
 
     # Pass data to the template
-    return render_template('admin.html', users=users, rooms=rooms, hostels=hostels, bookings=bookings, settings=settings, room_bookings=room_bookings, room_numbers=room_numbers, booking_percentages=booking_percentages, room_bookings_json=room_bookings_json, overall_occupancy=overall_occupancy)
+    return render_template('admin.html', users=users, rooms=rooms, hostels=hostels, bookings=bookings,
+                           settings=settings, room_bookings=room_bookings, room_numbers=room_numbers,
+                           booking_percentages=booking_percentages, room_bookings_json=room_bookings_json,
+                           overall_occupancy=overall_occupancy)
 
 
 # Route for the admin page
