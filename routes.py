@@ -148,6 +148,7 @@ def book():
 def get_room_id_by_name(room_name):
     room = Rooms.query.filter_by(room_number=room_name).first()
     return room.id if room else None
+
 @app.route('/book', methods=['POST'])
 def book_room():
     if request.method == 'POST':
@@ -416,18 +417,23 @@ def add_data():
         db.session.add(new_hostel)
         db.session.commit()
     elif data_type == 'booking':
-        # Extract booking data from the form
         user_id = request.form['user_id']
         room_id = request.form['room_id']
         check_in_date = request.form['check_in_date']
         check_out_date = request.form['check_out_date']
         guests = request.form['guests']
-        discount = request.form.get('discount')  # Optional field
+        discount = request.form.get('discount')
 
-        # Insert booking data into the Bookings table
-        new_booking = Bookings(user_id=user_id, room_id=room_id, check_in_date=check_in_date, check_out_date=check_out_date, guests=guests, discount=discount)
-        db.session.add(new_booking)
-        db.session.commit()
+        room = Rooms.query.get(room_id)
+        if room:
+            price = room.price_per_night * (1 - float(discount)) if discount else room.price_per_night
+
+            new_booking = Bookings(user_id=user_id, room_id=room_id, check_in_date=check_in_date,
+                                   check_out_date=check_out_date, guests=guests, price=price, discount=discount)
+            db.session.add(new_booking)
+            db.session.commit()
+        else:
+            return redirect('/error')
 
     return redirect('/admin')  # Redirect to the admin page after adding the data
 
