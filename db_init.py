@@ -92,6 +92,7 @@ def initialize_database():
              guests INT NOT NULL,
              discount DECIMAL(10, 2),
              price DECIMAL(10, 2) NOT NULL,
+             discounted_price DECIMAL(10, 2),
              settings_id INT,  # Добавлено новое поле для внешнего ключа
              FOREIGN KEY (user_id) REFERENCES users(id),
              FOREIGN KEY (room_id) REFERENCES rooms(id),

@@ -137,9 +137,10 @@ def book():
             if discount > 0.17:
                 discount = 0.17
 
-    total_price = price_per_night * duration_in_days * guests * (1 - discount)
+    discounted_price = price_per_night * (1 - discount)
+    total_price = discounted_price * duration_in_days * guests
 
-    new_booking = Bookings(user_id=user_id, room_id=room_id, check_in_date=check_in, check_out_date=check_out, guests=guests, price=total_price, discount=discount)
+    new_booking = Bookings(user_id=user_id, room_id=room_id, check_in_date=check_in, check_out_date=check_out, guests=guests, price=total_price, discount=discount, discounted_price=discounted_price)
     db.session.add(new_booking)
     db.session.commit()
 

@@ -50,6 +50,7 @@ class Bookings(db.Model):
     guests = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Float, nullable=False)
     discount = db.Column(db.Float, nullable=True)
+    discounted_price = db.Column(db.Float, nullable=True)
 
 
 
